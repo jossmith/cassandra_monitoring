@@ -1,0 +1,33 @@
+ X=($(nodetool status | grep 'UN' | awk '{print $2}'))
+ 
+ 
+#!/bin/sh
+startnode=172.29.7.50
+nodes=( $(nodetool -h ${startnode} status | grep 'UN' | awk '{print $2}'))
+if [ ! -d /opt/cronscripts ]; then
+        sudo mkdir -m 0777 -p /opt/cronscripts;
+fi;
+touch /opt/cronscripts/deletemelater.log
+outfile=/opt/cronscripts/deletemelater.log
+echo "Starting at:" >> $outfile
+date >> $outfile
+daynum=$(date +"%j" | sed 's/0*//') >> $outfile
+echo "This far" >> $outfile
+index=$((daynum%3)) >> $outfile
+while [ ${index} -lt ${#nodes[@]} ]
+do
+  echo "${nodes[index]}" >> $outfile
+  nodetool -h ${nodes[index]} repair -pr >> $outfile &
+  index=$((index+3))
+done
+wait
+echo "Ended at:" >> $outfile
+date >> $outfile
+
+
+
+
+
+crontab -e 
+0 0 * * * /etc/cassandra/cass_repair.sh
+6 0 * * * /etc/cass_cleanup.sh
