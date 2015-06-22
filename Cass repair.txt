@@ -1,5 +1,5 @@
 #!/bin/sh
-startnode=172.29.7.50
+startnode=$1
 nodes=( $(nodetool -h ${startnode} status | grep 'UN' | awk '{print $2}'))
 #if [ ! -d /opt/cronscripts ]; then
 #        sudo mkdir -m 0777 -p /opt/cronscripts;
