@@ -46,3 +46,7 @@ done
 wait
 echo "Ended at:" >> $outfile
 date >> $outfile
+
+
+
+ cat mail.txt | mail -s "Test Subject" -r joshua.smith@.net sitecloud@cb.com
