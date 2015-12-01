@@ -1,0 +1,92 @@
+#!/bin/bash
+sudo chef-client -E sitedb_usproduction
+/cloudscape/chef-add-role.sh sitedb_cassandra
+
+
+
+
+
+echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
+sudo apt-get update
+
+
+
+
+
+#! /bin/bash
+ for f in b; do
+  DISK=/dev/xvd$f
+  if [ -a ${DISK} ]; then
+    echo "n
+    p
+    1
+    
+    
+    w" | fdisk /dev/xvd$f
+    mkfs.ext4 ${DISK}1
+  fi
+done
+
+
+sudo fdisk /dev/xvdb
+n
+p
+1
+
+
+w
+sudo mkfs.ext4 /dev/xvdb1
+sudo echo '/dev/xvdb1 /var/lib/cassandra ext4 defaults,auto,noatime,noexec 0 0'| sudo tee -a /etc/fstab
+sudo mkdir /var/lib/cassandra
+sudo mount /dev/xvdb1 /var/lib/cassandra
+sudo rm -rf /var/lib/cassandra/
+sudo mkdir /var/lib/cassandra
+sudo chmod 777 /var/lib/cassandra/
+sudo chef-client -E sitedb_usproduction
+sudo /cloudscape/chef-add-role.sh sitedb_cassandra
+sudo aptitude install dsc20
+
+
+/cloudscape/chef-add-role.sh sitedb_cassandra
+sudo rm -r /var/lib/cassandra
+sudo service cassandra start
+
+
+
+
+ sudo chmod 777 /var/lib/cassandra/
+
+ 
+ 
+ 
+ 
+ 
+ sudo chef-client -E sitedb_test
+sudo /cloudscape/chef-add-role.sh sitedb_cassandra
+sudo aptitude install dsc20
+ 
+ for f in b; do
+  DISK=/dev/xvd$f
+  if [ -a ${DISK} ]; then
+    echo "n
+    p
+    1
+    
+    
+    w" | fdisk /dev/xvd$f
+    mkfs.ext4 ${DISK}1
+  fi
+done
+
+mkdir -p /var/lib/cassandra/
+
+echo '/dev/xvdb1 /var/lib/cassandra/ ext4 defaults,auto,noatime,noexec 0 0' | sudo tee -a /etc/fstab
+
+#mount /var/lib/cassandra/
+
+mount –a
+
+
+
+%s/seeds: "127.0.0.1"/seeds: "172.29.6.71,172.29.7.50"/

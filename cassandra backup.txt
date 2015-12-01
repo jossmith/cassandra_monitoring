@@ -1,0 +1,11 @@
+--create snapshot
+nodetool -h 172.21.31.10 snapshot -t 17221311005082015
+
+-- Find all directories with snapshot 17221311005082015
+find /var/lib/cassandra/data -type d \( -name system -o -name OpsCenter -o -name Keyspace1 \) -prune -o -name 17221311005082015 -print
+
+--upload snapshot
+aws s3 sync /var/lib/cassandra/data/search_test/sports_translated/snapshots/17221311005082015 s3://TestBucket/sports/snapshot
+
+--cleanup snapshot
+nodetool -h 172.21.31.10 cleanup
